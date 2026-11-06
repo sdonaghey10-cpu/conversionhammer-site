@@ -1,0 +1,33 @@
+name: mirror-old-site-2
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/mirror2.yml'
+permissions:
+  contents: write
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Second pass
+        run: |
+          B=https://www.conversionhammer.com
+          R="--resolve www.conversionhammer.com:443:162.159.143.30"
+          cd old
+          get() { p="/${1#/}"; p="${p%%\?*}"; mkdir -p "$(dirname ".$p")"; curl -fsSL $R "$B$p" -o ".$p" || echo "FAIL $p"; }
+          for p in assets/client-stories.js assets/page-scroll.js assets/editorial-home.js assets/editorial-layout.js manus-storage/dashboard_meta_ads_129d2b31.png assets/testimonial-posters/testimonial_christian_560d56d7.jpg assets/testimonial-posters/testimonial_micah_f24ed64f.jpg assets/testimonial-posters/testimonial_chris_4362926e.jpg manus-storage/testimonial_christian_560d56d7.mp4 manus-storage/testimonial_micah_f24ed64f.mp4 manus-storage/testimonial_chris_4362926e.mp4; do [ -f "$p" ] || get "$p"; done
+          for i in 1 2 3 4 5; do
+            grep -rhoE "/?(assets|manus-storage)/[A-Za-z0-9_./%-]+\.[A-Za-z0-9]{2,5}" . 2>/dev/null | sort -u | while read -r p; do q="/${p#/}"; [ -f ".$q" ] || get "$q"; done
+            grep -rhoE "\./[A-Za-z0-9_.-]+\.(js|css|png|jpe?g|webp|svg|mp4|webm|woff2?|gif)" assets 2>/dev/null | sort -u | while read -r p; do q="/assets/${p#./}"; [ -f ".$q" ] || get "$q"; done
+          done
+          find . -type f | sort > ../old-files.txt
+          wc -l ../old-files.txt
+      - name: Commit
+        run: |
+          git config user.name "github-actions"
+          git config user.email "actions@users.noreply.github.com"
+          git add old old-files.txt
+          git commit -m "Mirror pass 2" || echo nothing
+          git push
