@@ -1,0 +1,22 @@
+name: deploy-site
+on:
+  push:
+    paths: ['.github/workflows/deploy.yml']
+permissions:
+  contents: write
+jobs:
+  d:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          cp -a old/. .
+          rm -rf old old-files.txt
+          cp up/index.html up/404.html up/qualify.html .
+          cp up/*.js assets/
+          rm -rf up
+          git config user.name deploy
+          git config user.email deploy@users.noreply.github.com
+          git add -A
+          git commit -m "Deploy rebuilt site" || true
+          git push
