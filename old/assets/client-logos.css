@@ -1,0 +1,33 @@
+.ch-logo-marquee{position:relative;overflow:hidden;padding:30px 0 32px;background:linear-gradient(180deg,#090e13,#10171d 52%,#090e13);border-top:1px solid #00dee82b;border-bottom:1px solid #00dee82b}
+.ch-logo-header{position:relative;display:flex;align-items:center;justify-content:center;gap:24px;max-width:1280px;margin:0 auto 24px;padding:0 24px;min-height:36px}
+.ch-logo-header p{font-size:11px;line-height:1.6;letter-spacing:.22em;color:#9cb7bf;font-weight:700;text-align:center;margin:0}
+.ch-logo-pause{position:absolute;right:24px;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:36px;padding:0 12px;border:1px solid #b7dce024;border-radius:20px;color:#a9c4cc;font-size:11px;cursor:pointer;background:#ffffff05;transition:background-color .2s,color .2s}
+.ch-logo-pause:hover{color:#e0fdff;background:#00dee811}
+.ch-logo-pause:focus-visible,.ch-logo-window:focus-visible{outline:2px solid #00dee8;outline-offset:4px}
+.ch-logo-window{position:relative;width:100%;overflow:hidden;mask-image:linear-gradient(to right,transparent,#000 72px,#000 calc(100% - 72px),transparent)}
+.ch-logo-marquee .logo-scroll-track{display:flex;align-items:center;width:max-content;animation:ch-client-scroll 100s linear infinite}
+.ch-logo-item{flex:0 0 300px;width:300px;height:140px;margin:0 32px;display:flex;align-items:center;justify-content:center}
+.ch-logo-item img{display:block;width:100%;height:auto;max-width:300px;max-height:140px;object-fit:contain;filter:none;mix-blend-mode:normal;opacity:1;transition:transform .3s ease}
+.ch-logo-item img.ch-logo-original{width:auto;max-width:280px;max-height:132px}
+.ch-logo-marquee:hover .logo-scroll-track,.ch-logo-marquee:focus-within .logo-scroll-track{animation-play-state:paused}
+@media(hover:hover) and (pointer:fine){.ch-logo-item:hover img{transform:scale(1.045)}}
+@keyframes ch-client-scroll{to{transform:translateX(-33.333333333%)}}
+@media(max-width:767px){
+ .ch-logo-marquee{padding:24px 0 26px}
+ .ch-logo-header{justify-content:flex-start;gap:12px;padding:0 20px;margin-bottom:20px}
+ .ch-logo-header p{font-size:9px;line-height:1.7;letter-spacing:.15em;max-width:calc(100% - 68px);text-align:left}
+ .ch-logo-pause{right:20px;width:44px;height:44px;padding:0;font-size:17px}
+ .ch-logo-pause-label{display:none}
+ .ch-logo-item{flex-basis:244px;width:244px;height:112px;margin:0 20px}
+ .ch-logo-item img{max-width:244px;max-height:112px}
+ .ch-logo-item img.ch-logo-original{max-width:230px;max-height:110px}
+ .ch-logo-window{mask-image:linear-gradient(to right,transparent,#000 24px,#000 calc(100% - 24px),transparent)}
+ .ch-logo-marquee .logo-scroll-track{animation-duration:110s}
+}
+@media(prefers-reduced-motion:reduce){
+ .ch-logo-marquee .logo-scroll-track{animation:none;transform:none}
+ .ch-logo-window{overflow-x:auto;scrollbar-width:thin;scrollbar-color:#5b7b86 #10171d}
+ .ch-logo-duplicate,.ch-logo-pause{display:none}
+ .ch-logo-header p{max-width:100%}
+ .ch-logo-item img{transition:none}
+}
