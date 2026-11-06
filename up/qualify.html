@@ -1,0 +1,419 @@
+<title>Apply | Conversion Hammer</title>
+<link rel="icon" type="image/x-icon" href="/favicon.ico">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/logo192.png">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: dark engineering-grid site. Left-aligned oversized headline, cyan accent, mono labels. Two views: home and #qualify funnel. */
+:root{
+  --bg:#07090b; --bg2:#0d1114; --line:#1b2328; --fg:#f2f0ea; --muted:#8d989e; --accent:#19d3e0; --accent-ink:#04191c; --ok:#47d17f; --warn:#e8b04a;
+  --display:"Archivo","Helvetica Neue",Arial,sans-serif; --body:"Archivo","Helvetica Neue",Arial,sans-serif; --mono:"JetBrains Mono",ui-monospace,Menlo,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--body);padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0;
+ overflow-x:clip}
+/* full-bleed section bands */
+.band-sec{position:relative;isolation:isolate}
+.band-sec::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:100vw;margin-left:-50vw;z-index:-1}
+.alt::before{background:var(--bg2);border-block:1px solid var(--line)}
+.glow::before{background:radial-gradient(900px 420px at 15% 0%,rgba(25,211,224,.16),transparent 70%),linear-gradient(180deg,#0b1a1e,#081014)}
+.hero-glow::before{background:radial-gradient(800px 520px at 82% 40%,rgba(25,211,224,.14),transparent 70%)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+h1,h2,h3{font-family:var(--display);margin:0;text-wrap:balance;letter-spacing:-.035em;line-height:.98}
+h1{font-weight:800;font-size:clamp(44px,8.2vw,104px)}
+h2{font-weight:800;font-size:clamp(34px,5.4vw,66px)}
+h3{font-weight:600;font-size:22px;letter-spacing:-.02em;line-height:1.15}
+.acc{color:var(--accent)}
+p{margin:0}
+.lead{font-size:18px;color:#c8cfd2;max-width:56ch}
+/* nav */
+.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(7,9,11,.88);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin:0 calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:0 max(16px,env(safe-area-inset-left,0px))}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;min-height:64px;flex-wrap:wrap}
+.logo{display:flex;align-items:center;gap:10px;text-decoration:none;font-weight:800;letter-spacing:-.03em;line-height:1;font-size:15px}
+.logo svg{width:22px;height:22px}
+.links{display:flex;align-items:center;gap:22px;font-size:13px}
+.links a{text-decoration:none;color:#c8cfd2}
+.links a:hover{color:var(--accent)}
+.btn{display:inline-flex;align-items:center;gap:10px;border:0;border-radius:999px;cursor:pointer;font:600 14px var(--body);padding:14px 24px;text-decoration:none;background:var(--accent);color:var(--accent-ink);transition:transform .15s,filter .15s}
+.btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.btn.light{background:var(--fg);color:#0a0d0f}
+.btn.ghost{background:transparent;color:var(--fg);border-bottom:1px solid var(--line);padding:13px 4px}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+/* hero */
+.hero{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:24px;align-items:center;padding-block:72px 40px}
+.hero .copy{display:flex;flex-direction:column;gap:28px}
+.hero .cta{display:flex;gap:18px;flex-wrap:wrap;align-items:center}
+.hero svg.hammer{width:100%;height:auto;max-width:520px;justify-self:center}
+.badge{display:inline-flex;align-items:center;gap:8px}
+.badge i{width:7px;height:7px;border-radius:50%;background:var(--ok);display:inline-block}
+.gate-note{border-top:1px solid var(--line);padding-top:14px;max-width:60ch}
+/* marquee */
+.marq{border-block:1px solid var(--line);margin:40px calc(-1*max(16px,env(safe-area-inset-left,0px)));padding:22px 0;overflow:hidden;background:var(--bg2)}
+.marq .lbl{padding:0 max(16px,env(safe-area-inset-left,0px));margin:0 auto 14px;max-width:1180px}
+.track{display:flex;gap:44px;width:max-content;animation:slide 50s linear infinite}
+.track span{font-weight:600;letter-spacing:-.02em;color:#aeb7bb;white-space:nowrap;font-size:18px}
+@keyframes slide{to{transform:translateX(-50%)}}
+/* stats */
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+.stat{padding:28px 24px;border:1px solid var(--line);border-radius:18px;background:var(--bg2);display:flex;flex-direction:column;gap:6px}
+.stat b{font:800 clamp(34px,4.4vw,54px)/1 var(--display);letter-spacing:-.04em;color:var(--accent);font-variant-numeric:tabular-nums}
+.stat span{color:#c8cfd2;font-size:14px}
+.fine{font-size:13px;color:var(--muted);margin-top:14px;max-width:80ch}
+section.s{padding-block:96px}
+.fit-card{border:1px solid var(--line);border-radius:18px;background:var(--bg2);padding:8px 28px}
+.fit-card .rows{border-top:0}
+.fit-card .rows div:last-child{border-bottom:0}
+.head{display:flex;flex-direction:column;gap:18px;margin-bottom:40px}
+/* system */
+.sys{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px}
+.sys>div{background:var(--bg);border:1px solid var(--line);border-radius:18px;padding:34px;display:flex;flex-direction:column;gap:12px;transition:border-color .2s,transform .2s}
+.sys>div:hover{border-color:rgba(25,211,224,.5);transform:translateY(-2px)}
+.sys p{color:#b7c0c4}
+/* fit */
+.fit{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:start}
+.rows{border-top:1px solid var(--line)}
+.rows div{display:flex;justify-content:space-between;gap:20px;padding:16px 0;border-bottom:1px solid var(--line)}
+.rows div span:last-child{text-align:right;font-weight:600}
+/* quote band */
+.band{padding:120px 0;text-align:left}
+.final{margin-top:0!important;border-top:0!important}
+/* stories */
+.tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px}
+.tab{background:transparent;color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:12px 16px;cursor:pointer;font:500 14px var(--body);text-align:left}
+.tab[aria-selected="true"]{border-color:var(--accent);background:rgba(25,211,224,.08)}
+.tab small{display:block;color:var(--muted);font-size:12px}
+.story{border:1px solid var(--line);border-radius:18px;background:var(--bg);padding:36px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px}
+.story .big{font:800 clamp(48px,7vw,84px)/1 var(--display);letter-spacing:-.045em;color:var(--accent)}
+.story .m{display:flex;gap:36px;flex-wrap:wrap;margin-top:18px}
+.story .m div{display:flex;flex-direction:column}
+.story .m b{font:800 30px/1 var(--display);letter-spacing:-.03em}
+.story .m span{font-size:13px;color:var(--muted)}
+/* faq */
+details{border-top:1px solid var(--line);padding:20px 0}
+details:last-of-type{border-bottom:1px solid var(--line)}
+summary{cursor:pointer;font:600 20px var(--display);letter-spacing:-.02em;list-style:none;display:flex;justify-content:space-between;gap:20px}
+summary::after{content:"+";color:var(--accent);font-family:var(--mono)}
+details[open] summary::after{content:"–"}
+details p{color:#b7c0c4;margin-top:12px;max-width:64ch}
+/* cta */
+.final{padding-block:110px;border-top:1px solid var(--line);margin-top:96px;display:flex;flex-direction:column;gap:28px;align-items:flex-start}
+footer{border-top:1px solid var(--line);padding-block:40px 56px;display:grid;grid-template-columns:2fr 1fr 1fr;gap:32px;font-size:14px;color:#b7c0c4}
+footer h4{margin:0 0 12px;font:500 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+footer a{display:block;text-decoration:none;padding:3px 0}
+footer a:hover{color:var(--accent)}
+/* funnel */
+#qualify-view{display:none;min-height:100vh}
+body.q #home-view{display:none}
+body.q #qualify-view{display:block}
+.qtop{display:flex;justify-content:space-between;align-items:center;padding-block:24px}
+.bar{height:3px;background:var(--line);margin-bottom:56px}
+.bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .35s}
+.qwrap{max-width:720px;margin:0 auto;padding-bottom:96px}
+.step{display:none;flex-direction:column;gap:28px;animation:in .3s ease}
+.step.on{display:flex}
+@keyframes in{from{opacity:.0;transform:translateY(10px)}to{opacity:1;transform:none}}
+.step h2{font-size:clamp(30px,5vw,52px)}
+.opts{display:grid;gap:12px}
+.opt{display:flex;align-items:center;gap:16px;text-align:left;width:100%;background:var(--bg2);color:var(--fg);border:1px solid var(--line);border-radius:14px;padding:18px 20px;font:500 17px var(--body);cursor:pointer;transition:border-color .15s,background .15s}
+.opt:hover{border-color:var(--accent);background:rgba(25,211,224,.06)}
+.opt kbd{font:500 12px var(--mono);border:1px solid var(--line);padding:3px 8px;color:var(--muted)}
+.field{display:flex;flex-direction:column;gap:8px}
+.field label{font:500 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.field input,.field textarea{background:var(--bg2);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:16px;font:400 17px var(--body);width:100%}
+.field input:focus,.field textarea:focus{outline:none;border-color:var(--accent)}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.back{background:none;border:0;color:var(--muted);cursor:pointer;font:500 13px var(--mono);letter-spacing:.1em;text-transform:uppercase;padding:8px 0}
+.err{color:var(--warn);font-size:14px;min-height:20px}
+.done{border:1px solid var(--line);background:var(--bg2);padding:32px}
+@media (max-width:860px){
+ .hero,.fit,.story{grid-template-columns:minmax(0,1fr)}
+ .hero svg.hammer{max-width:340px;order:-1}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stat:nth-child(2){border-right:0}
+ .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+ .sys{grid-template-columns:minmax(0,1fr)}
+ footer{grid-template-columns:minmax(0,1fr)}
+ .links a.hide-m{display:none}
+}
+@media (prefers-reduced-motion:reduce){.track{animation:none}.step{animation:none}html{scroll-behavior:auto}}
+</style>
+
+<div id="home-view">
+ <header class="nav"><div class="wrap">
+  <a class="logo" href="/" aria-label="Conversion Hammer home">
+   <svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M4 8h10v5H4zM14 10h3M9 13v8"/></svg>
+   <span>conversion<br>hammer.</span>
+  </a>
+  <nav class="links" aria-label="Main">
+   <a href="#system">Services</a><a href="#results">Results</a><a href="#fit" class="hide-m">Who it's for</a><a href="#faq" class="hide-m">FAQ</a>
+   <a class="btn light" href="#qualify">Let's talk</a>
+  </nav>
+ </div></header>
+
+ <main class="wrap" id="top">
+  <section class="hero band-sec hero-glow">
+   <div class="copy">
+    <div class="mono badge"><i></i> Open for new partnerships</div>
+    <h1>More qualified opportunities. <span class="acc">Fewer wasted calls.</span></h1>
+    <p class="lead">You already have a sales team and marketing in place. We find where leads are slipping between the ad and the close, then fix the ads, the qualification and the tracking so your reps spend their time on buyers.</p>
+    <div class="cta">
+     <a class="btn" href="#qualify">See if we're a fit &rarr;</a>
+     <a class="btn ghost" href="#results">See the results &nearr;</a>
+    </div>
+    <p class="mono gate-note">For companies doing $1M+ a year with a sales team, a CRM and marketing already running.</p>
+   </div>
+   <svg class="hammer" viewBox="0 0 520 520" role="img" aria-label="Wireframe hammer">
+    <defs><linearGradient id="hg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4b5c63"/><stop offset="1" stop-color="#1a2328"/></linearGradient></defs>
+    <circle cx="260" cy="260" r="236" fill="none" stroke="#19d3e0" stroke-opacity=".12"/>
+    <circle cx="260" cy="260" r="170" fill="none" stroke="#19d3e0" stroke-opacity=".08"/>
+    <g transform="rotate(28 260 260)">
+     <rect x="236" y="190" width="48" height="300" fill="url(#hg)" stroke="#19d3e0" stroke-opacity=".5"/>
+     <g stroke="#0a0d0f" stroke-width="5">
+      <path d="M236 330h48M236 352h48M236 374h48M236 396h48M236 418h48"/>
+     </g>
+     <rect x="96" y="80" width="328" height="130" fill="url(#hg)" stroke="#19d3e0" stroke-width="1.5"/>
+     <rect x="126" y="106" width="268" height="78" fill="#0a0d0f" stroke="#19d3e0" stroke-opacity=".6"/>
+     <path d="M96 80l30 26M424 80l-30 26M96 210l30-26M424 210l-30-26" stroke="#19d3e0" stroke-opacity=".6"/>
+    </g>
+   </svg>
+  </section>
+
+  <div class="marq" aria-label="Clients">
+   <p class="mono lbl">Trusted by service businesses across the US</p>
+   <div class="track" id="track"></div>
+  </div>
+
+  <section id="results" class="s" style="padding-top:56px">
+   <div class="stats">
+    <div class="stat"><b>4.5&times;</b><span>Christian, ROAS in month one</span></div>
+    <div class="stat"><b>1,000</b><span>MRMT, new leads in two weeks</span></div>
+    <div class="stat"><b>$70K</b><span>Sundog, added revenue in two months</span></div>
+    <div class="stat"><b>10.5&times;</b><span>Sundog, ROAS in two months</span></div>
+   </div>
+   <p class="fine">Four years in business. Dozens of clients. These are selected client outcomes, not a guarantee of future results.</p>
+  </section>
+
+  <section id="system" class="s band-sec alt">
+   <div class="head">
+    <p class="mono">The whole system</p>
+    <h2>Better leads, <span class="acc">tracked</span> all the way to revenue.</h2>
+    <p class="lead">Marketing and sales usually run as two separate machines. Leads go cold between the form and the first call, each side blames the other, and ad platforms learn from the wrong signal. We close that gap with four pieces of work.</p>
+   </div>
+   <div class="sys">
+    <div><p class="mono">Audit</p><h3>Find where leads leak.</h3><p>We review your campaigns, lead sources, response times, booked calls, show rates and closed revenue. You get a clear read on whether the problem is lead quality, follow-up or the sales process.</p></div>
+    <div><p class="mono">Paid advertising</p><h3>Aim spend at buyers.</h3><p>Tighter targeting, offers and creative built for the people your reps want on the phone, with spend tied to qualified opportunities instead of raw lead counts.</p></div>
+    <div><p class="mono">Qualification</p><h3>Screen before the call.</h3><p>Funnels that ask the right questions up front, so the calendar fills with prospects who fit and your closers stop sitting through calls that never had a chance.</p></div>
+    <div><p class="mono">CRM and tracking</p><h3>See every dollar's path.</h3><p>Clean pipelines, routing, instant lead alerts and reporting from ad click to closed deal. Closed-deal data flows back to the ad platforms so they optimize for revenue.</p></div>
+   </div>
+   <div style="margin-top:28px"><a class="btn" href="#qualify">Start with an audit &rarr;</a></div>
+  </section>
+
+  <section id="fit" class="s">
+   <div class="fit">
+    <div class="head" style="margin:0">
+     <p class="mono">A stronger next chapter</p>
+     <h2>Is this <span class="acc">for you?</span></h2>
+     <p class="lead">We work with established teams that already sell and already market. If that is you, an audit will show what is holding the numbers back. If not, our free audit is still open to anyone.</p>
+    </div>
+    <div class="rows fit-card" role="table">
+     <div><span class="mono">Revenue</span><span>$1M+ per year</span></div>
+     <div><span class="mono">Sales team</span><span>Reps already closing</span></div>
+     <div><span class="mono">CRM</span><span>One in place</span></div>
+     <div><span class="mono">Process</span><span>Documented SOPs or AI in use</span></div>
+     <div><span class="mono">Years in business</span><span>5+</span></div>
+     <div><span class="mono">Goal</span><span>More qualified opportunities</span></div>
+     <div><span class="mono">Commitment</span><span>Ready to invest in a growth system</span></div>
+    </div>
+   </div>
+  </section>
+
+  <section class="band band-sec glow">
+   <p class="mono" style="margin-bottom:20px">The no-waste standard</p>
+   <h2>Less noise.<br><span class="acc">More impact.</span></h2>
+   <p class="lead" style="margin-top:24px">Every campaign, form question and follow-up message is built to put a qualified buyer in front of your team. Anything that does not do that gets cut.</p>
+  </section>
+
+  <section id="stories" class="s band-sec alt">
+   <div class="head">
+    <p class="mono">The people behind the numbers</p>
+    <h2>Their businesses.<br>Our stories.</h2>
+   </div>
+   <div class="tabs" role="tablist" aria-label="Client stories">
+    <button class="tab" role="tab" aria-selected="true" data-i="0">Christian Brown<small>Smoky's Pressure Washer</small></button>
+    <button class="tab" role="tab" aria-selected="false" data-i="1">Micah Thomas<small>MRMT</small></button>
+    <button class="tab" role="tab" aria-selected="false" data-i="2">Chris Jones<small>Sundog Solution</small></button>
+   </div>
+   <div class="story" id="story"></div>
+  </section>
+
+  <section id="faq" class="s">
+   <div class="head">
+    <p class="mono">Straight answers</p>
+    <h2>Fair questions.<br>Honest answers.</h2>
+   </div>
+   <div>
+    <details><summary>Do ads work for my kind of business?</summary><p>If you already have a sales team and a CRM, usually yes, and the audit shows how much. We look at your offer, targeting, follow-up and close process before recommending any spend.</p></details>
+    <details><summary>Will you promise better close rates?</summary><p>No. We control lead quality, qualification and tracking. We do not control how your team sells. If the audit points to a sales problem, we say so and show you the data.</p></details>
+    <details><summary>How do we avoid wasting more money?</summary><p>We start by finding where current spend leaks, then tie every campaign to qualified opportunities and booked calls instead of clicks and form fills.</p></details>
+    <details><summary>What if we are not a good fit?</summary><p>We tell you. We review your business, market, capacity and goals first. If we cannot help, we say that on the first call and point you to a better next step.</p></details>
+    <details><summary>How is this different from other agencies?</summary><p>You see the strategy, the actions and the numbers behind every decision. You keep access to your ad accounts, your CRM and your data.</p></details>
+    <details><summary>What if we already get referrals?</summary><p>Good. Referrals are a strong base. We add a second lead source that does not depend on them and make sure every lead gets worked fast.</p></details>
+   </div>
+  </section>
+
+  <section class="final band-sec glow">
+   <p class="mono">Starts with a conversation</p>
+   <h2>Let's make<br><span class="acc">an impact.</span></h2>
+   <p class="lead">Answer a few questions so we know whether we can help. It takes about two minutes.</p>
+   <a class="btn" href="#qualify">Check if we're a fit &rarr;</a>
+  </section>
+
+  <footer>
+   <div><a class="logo" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M4 8h10v5H4zM14 10h3M9 13v8"/></svg><span>conversion<br>hammer.</span></a><p style="margin-top:14px;max-width:34ch">Better leads for sales teams, and the systems to turn them into revenue.</p></div>
+   <div><h4>Explore</h4><a href="#system">Services</a><a href="#results">Results</a><a href="#faq">FAQ</a><a href="#qualify">Contact</a></div>
+   <div><h4>Find us</h4><a href="https://www.instagram.com/stephen_donaghey/" target="_blank" rel="noopener">Instagram</a><a href="https://www.facebook.com/Stephend410" target="_blank" rel="noopener">Facebook</a><a href="https://www.youtube.com/@donagheystephen" target="_blank" rel="noopener">YouTube</a><p style="margin-top:10px">stephen@conversionhammer.com</p></div>
+  </footer>
+  <p class="mono" style="padding-bottom:40px">&copy; 2026 Conversion Hammer. Ceramic Scaling LLC.</p>
+ </main>
+</div>
+
+<div id="qualify-view">
+ <div class="wrap">
+  <div class="qtop">
+   <a class="logo" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="1.8"><path d="M4 8h10v5H4zM14 10h3M9 13v8"/></svg><span>conversion<br>hammer.</span></a>
+   <span class="mono" id="count"></span>
+  </div>
+  <div class="bar"><i id="prog"></i></div>
+  <form class="qwrap" id="qform" novalidate>
+   <div id="steps"></div>
+   <p class="err" id="err" role="alert"></p>
+  </form>
+ </div>
+</div>
+
+<script>
+(function(){
+  /* Set this to a GoHighLevel inbound webhook URL (or any endpoint) once the site is hosted on the real domain. */
+  var CONFIG={webhook:"",source:"conversionhammer.com/qualify"};
+
+  var names=["NorthStar Construction","Assurity","Tri Star Pros","Bloomin' Blinds","Providence Container Living","Smoky's Pressure Washer","Strong Quality Roofing","Dream Bath Remodel","Sanchez Construction","Southern Dream Landscaping","DTC Paid Ads","SHAIPE","Shine Mobile Detailing","Bay Area Auto Detailing","Higher Calling Tree Service","The Sales League"];
+  var tr=document.getElementById("track");
+  tr.innerHTML=names.concat(names).map(function(n){return "<span>"+n+"</span>"}).join("");
+
+  var stories=[
+   {t:"A pressure washer hitting $20K months.",big:"4.5×",bl:"Return on ad spend in month one",m:[["$20K","Monthly revenue reached"]],p:"Christian runs Smoky's Pressure Washer in East Tennessee. In our first month together his ads returned 4.5 times what he spent, and he went on to push the business to $20,000 a month."},
+   {t:"1,000 leads in two weeks.",big:"1,000",bl:"New leads in the first two weeks",m:[["2 wks","To first 1,000 leads"]],p:"Micah and I brought in 1,000 new leads for MRMT in our first two weeks working together."},
+   {t:"10.5× return in two months.",big:"10.5×",bl:"Return on ad spend in two months",m:[["$70K","Added revenue"]],p:"In our first two months with Sundog Solution, Chris saw a 10.5× return on ad spend and $70,000 in added revenue."}
+  ];
+  var tabs=[].slice.call(document.querySelectorAll(".tab"));
+  function showStory(i){
+    var s=stories[i];
+    document.getElementById("story").innerHTML='<div><p class="mono" style="margin-bottom:12px">Client story</p><h3 style="font-size:30px;margin-bottom:18px">'+s.t+'</h3><p style="color:#b7c0c4;max-width:52ch">'+s.p+'</p></div><div><div class="big">'+s.big+'</div><p class="mono" style="margin-top:8px">'+s.bl+'</p><div class="m">'+s.m.map(function(x){return "<div><b>"+x[0]+"</b><span>"+x[1]+"</span></div>"}).join("")+'</div></div>';
+    tabs.forEach(function(t,j){t.setAttribute("aria-selected",j===i?"true":"false")});
+  }
+  tabs.forEach(function(t){t.addEventListener("click",function(){showStory(+t.dataset.i)})});
+  showStory(0);
+
+  /* ---- Qualify funnel ---- */
+  var steps=[
+   {k:"revenue",q:"What is your company's annual revenue?",type:"choice",o:["Under $1M","$1M to $3M","$3M to $10M","$10M+"]},
+   {k:"years",q:"How long have you been in business?",type:"choice",o:["Under 2 years","2 to 5 years","5+ years"]},
+   {k:"business_type",q:"What kind of business do you run?",type:"choice",o:["Home services","Coaching or consulting","Insurance or financial","Other sales-led business"]},
+   {k:"sales_team",q:"Do you have a sales team?",type:"choice",o:["Yes, 3 or more reps","Yes, 1 to 2 reps","No, the owner sells"]},
+   {k:"crm",q:"Do you use a CRM today?",type:"choice",o:["Yes","No"]},
+   {k:"process",q:"Are your sales process documented, or is AI part of how your team works?",type:"choice",o:["Documented SOPs","AI is part of our workflow","Both","Neither yet"]},
+   {k:"runs_ads",q:"Do you currently run ads?",type:"choice",o:["Yes","No"]},
+   {k:"ad_spend",q:"How much are you spending on ads each month?",type:"choice",o:["Under $2K","$2K to $5K","$5K to $10K","$10K to $15K","$15K to $30K","$30K+"],showIf:function(a){return a.runs_ads==="Yes"}},
+   {k:"lead_source",q:"Do you currently have a marketing source that's bringing in leads?",type:"choice",o:["Yes, referrals","Yes, paid ads","Yes, organic or content","Yes, more than one","No"]},
+   {k:"goal",q:"What do you want most from this?",type:"choice",o:["More qualified opportunities","Fewer unqualified calls on my reps' calendars","Faster follow-up on every lead","Better CRM and pipeline visibility","Clear tracking from ad click to closed revenue","Lower cost per booked appointment","A second lead source besides referrals"]},
+   {k:"offer",q:"What is it that you sell?",type:"text",ph:"For example: kitchen remodels, roofing, insurance policies, coaching programs..."},
+   {k:"about",q:"Tell me more about your business and your sales team.",type:"text",ph:"How many reps, how leads reach them today, what is working and what is not..."},
+   {k:"contact",q:"Where should we send your results?",type:"contact"}
+  ];
+  var answers={},cur=0,history=[];
+  var $steps=document.getElementById("steps"),$err=document.getElementById("err"),$prog=document.getElementById("prog"),$count=document.getElementById("count");
+
+  function visible(){return steps.filter(function(s){return !s.showIf||s.showIf(answers)})}
+  function render(){
+    var vis=visible(),s=steps[cur];
+    var pos=vis.indexOf(s)+1;
+    $count.textContent="Step "+pos+" of "+vis.length;
+    $prog.style.width=Math.round((pos-1)/vis.length*100)+"%";
+    $err.textContent="";
+    var h='<div class="step on"><h2>'+s.q+'</h2>';
+    if(s.type==="choice"){
+      h+='<div class="opts">'+s.o.map(function(o,i){return '<button type="button" class="opt" data-v="'+o.replace(/"/g,"&quot;")+'"><kbd>'+String.fromCharCode(65+i)+'</kbd>'+o+'</button>'}).join("")+'</div>';
+    }else if(s.type==="text"){
+      h+='<div class="field"><label for="f-text">Your answer</label><textarea id="f-text" rows="5" style="min-height:140px;resize:vertical" placeholder="'+s.ph.replace(/"/g,"&quot;")+'">'+esc(answers[s.k]||"")+'</textarea></div>';
+      h+='<div class="row"><button class="btn" type="button" id="next">Continue &rarr;</button></div>';
+    }else{
+      var under=answers.revenue==="Under $1M";
+      h+=under?'<p class="lead">Our free audit is open to every business. Leave your details and we will send it over.</p>':'<p class="lead">We review your answers and reply with next steps.</p>';
+      h+='<div class="field"><label for="f-biz">Business name</label><input id="f-biz" autocomplete="organization"></div>';
+      h+='<div class="field"><label for="f-name">Your name</label><input id="f-name" autocomplete="name"></div>';
+      h+='<div class="field"><label for="f-phone">Phone number</label><input id="f-phone" type="tel" autocomplete="tel"></div>';
+      h+='<div class="field"><label for="f-email">Email</label><input id="f-email" type="email" autocomplete="email"></div>';
+      h+='<div class="row"><button class="btn" type="submit">Submit &rarr;</button></div>';
+    }
+    h+=history.length?'<div><button type="button" class="back" id="back">&larr; Back</button></div>':'';
+    h+='</div>';
+    $steps.innerHTML=h;
+  }
+  function nextIndex(from){
+    for(var i=from+1;i<steps.length;i++){
+      var s=steps[i];
+      if(!s.showIf||s.showIf(answers))return i;
+    }
+    return steps.length-1;
+  }
+  $steps.addEventListener("click",function(e){
+    var b=e.target.closest(".opt");
+    if(b){
+      var s=steps[cur];answers[s.k]=b.dataset.v;history.push(cur);
+      cur=nextIndex(cur);
+      render();return;
+    }
+    if(e.target.closest("#next")){
+      var t=document.getElementById("f-text"),v=t?t.value.trim():"";
+      if(!v){$err.textContent="Write a sentence or two so we know where you are.";return}
+      answers[steps[cur].k]=v;history.push(cur);cur=nextIndex(cur);render();return;
+    }
+    if(e.target.id==="back"){cur=history.pop();render()}
+  });
+  document.getElementById("qform").addEventListener("submit",function(e){
+    e.preventDefault();
+    var f={biz:val("f-biz"),name:val("f-name"),phone:val("f-phone"),email:val("f-email")};
+    if(!f.biz||!f.name||!f.phone||!/^\S+@\S+\.\S+$/.test(f.email)){$err.textContent="Fill in business name, your name, a phone number and a valid email.";return}
+    var payload={source:CONFIG.source,submitted_at:new Date().toISOString(),business_name:f.biz,name:f.name,phone:f.phone,email:f.email,answers:answers,qualified:answers.revenue!=="Under $1M"&&answers.sales_team!=="No, the owner sells"&&answers.crm==="Yes"&&answers.ad_spend!=="Under $2K"};
+    send(payload);
+    var q=payload.qualified;
+    $prog.style.width="100%";$count.textContent="Done";
+    $steps.innerHTML='<div class="done"><p class="mono" style="margin-bottom:12px">'+(q?"Looks like a fit":"Request received")+'</p><h2 style="font-size:clamp(28px,4.5vw,44px)">'+(q?"Thanks, "+esc(f.name.split(" ")[0])+". We'll be in touch soon.":"Thanks, "+esc(f.name.split(" ")[0])+". Your free audit is on its way.")+'</h2><p class="lead" style="margin-top:16px">'+(q?"We review every submission and follow up by phone or email.":"The free audit is open to everyone. Deeper work starts at $1M+ in annual revenue, with a sales team, a CRM and at least $2K a month in ad spend.")+'</p><p style="margin-top:20px"><a class="btn light" href="/">Back to the site</a></p></div>';
+  });
+  function val(id){var el=document.getElementById(id);return el?el.value.trim():""}
+  function esc(s){return s.replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+  function send(p){
+    if(!CONFIG.webhook)return;
+    try{fetch(CONFIG.webhook,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(p)})}catch(err){}
+  }
+
+  /* ---- routing ---- */
+  function route(){
+    var isQ=location.hash==="#qualify";
+    document.body.classList.toggle("q",isQ);
+    if(isQ){cur=0;answers={};history=[];render();window.scrollTo(0,0)}
+    else if(location.hash==="#top"||location.hash===""){window.scrollTo(0,0)}
+  }
+  window.addEventListener("hashchange",route);
+  location.hash="#qualify";
+  route();
+})();
+</script>
